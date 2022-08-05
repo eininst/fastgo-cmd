@@ -1,4 +1,4 @@
-module github.com/eininst/go-fast-cmd
+module github.com/eininst/fastgo-cmd
 
 go 1.19
 
