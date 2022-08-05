@@ -1,2 +1,2 @@
-# go-fast-cmd
-go-fast-cmd
+# fastgo-cmd
+fastgo-cmd
