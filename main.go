@@ -1,13 +1,41 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"log"
 	"os"
+	"os/exec"
 
 	"github.com/urfave/cli/v2"
 )
 
+func cmd(s string) (string, error) {
+	//"go build -o run run_api_grace.go"
+	cmd := exec.Command("/bin/bash", "-c", s)
+	var out bytes.Buffer
+	cmd.Stdout = &out
+	cmd.Stderr = os.Stderr
+	err := cmd.Start()
+	if err != nil {
+		return "", err
+	}
+	err = cmd.Wait()
+
+	r := out.String()
+	if len(r) > 0 {
+		log.Println(r)
+	}
+	return r, err
+}
+
+func new(name string) {
+	cmd(fmt.Sprintf("mkdir %s", name))
+	cmd(fmt.Sprintf("cd %s", name))
+	cmd(fmt.Sprintf("curl -o %s https://fab-jar.oss-cn-zhangjiakou.aliyuncs.com/t/templete.zip", name))
+	cmd(fmt.Sprintf("unzip %s", name))
+
+}
 func main() {
 	s := "wewe"
 	app := &cli.App{
@@ -17,9 +45,9 @@ func main() {
 		},
 		Commands: []*cli.Command{
 			{
-				Name:     "add",
-				Aliases:  []string{"a"},
-				Usage:    "calc 1+1",
+				Name:     "new",
+				Aliases:  []string{"n"},
+				Usage:    "new project",
 				Category: "arithmetic",
 				Flags: []cli.Flag{
 					&cli.IntFlag{
@@ -35,8 +63,9 @@ func main() {
 					},
 				},
 				Action: func(c *cli.Context) error {
-					fmt.Println("1 + 1 = ", 1+1)
-
+					if c.Args().Len() > 0 {
+						new(c.Args().Get(0))
+					}
 					return nil
 				},
 			},
