@@ -31,9 +31,8 @@ func cmd(s string) (string, error) {
 
 func new(name string) {
 	cmd(fmt.Sprintf("mkdir %s", name))
-	cmd(fmt.Sprintf("cd %s", name))
-	cmd(fmt.Sprintf("curl -o %s https://fab-jar.oss-cn-zhangjiakou.aliyuncs.com/t/templete.zip", name))
-	cmd(fmt.Sprintf("unzip %s", name))
+	cmd(fmt.Sprintf("curl -o %s/temp https://fab-jar.oss-cn-zhangjiakou.aliyuncs.com/t/templete.zip", name))
+	cmd(fmt.Sprintf("unzip -d %s %s/temp && rm -rf %s/temp", name, name, name))
 
 }
 func main() {
@@ -63,6 +62,7 @@ func main() {
 					},
 				},
 				Action: func(c *cli.Context) error {
+					fmt.Println(c.Args().Len())
 					if c.Args().Len() > 0 {
 						new(c.Args().Get(0))
 					}
